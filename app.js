@@ -21,6 +21,8 @@ const purchaseRoute = require("./routes/purchaseRoute");
 const premiuemRoute = require("./routes/premiuemRoute");
 const passwordRoute = require("./routes/passwordRoute");
 
+
+
 const app = express();
 
 app.use(helmet());
@@ -39,6 +41,10 @@ app.use("/expense", expenseRoute);
 app.use("/purchase", purchaseRoute);
 app.use("/premiuem", premiuemRoute);
 app.use("/password", passwordRoute);
+
+app.use((res,res)=>{
+  res.sendFile(path.join(__dirname,`public/${req.url}`));
+});
 
 User.hasMany(Expense);
 Expense.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
