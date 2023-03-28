@@ -42,7 +42,7 @@ app.use("/purchase", purchaseRoute);
 app.use("/premiuem", premiuemRoute);
 app.use("/password", passwordRoute);
 
-app.use((res,res)=>{
+app.use((req,res)=>{
   res.sendFile(path.join(__dirname,`public/${req.url}`));
 });
 
