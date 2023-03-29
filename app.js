@@ -25,7 +25,7 @@ const passwordRoute = require("./routes/passwordRoute");
 
 const app = express();
 
-app.use(helmet());
+//app.use(helmet());    //disabled as axios js not loading
 //app.use(helmet.hidePoweredBy());
 //const accessLogStream = fs.createWriteStream(path.join(__dirname,'access.log'),{flags:'a'});
 //app.use(morgan('combined',{stream:accessLogStream}));
@@ -42,7 +42,7 @@ app.use("/purchase", purchaseRoute);
 app.use("/premiuem", premiuemRoute);
 app.use("/password", passwordRoute);
 
-app.use(express.static(path.resolve(__dirname, "public")));
+
 app.use((req,res)=>{
   console.log('url',req.originalUrl);
  res.sendFile(path.join(__dirname,`./public/${req.originalUrl}`));
