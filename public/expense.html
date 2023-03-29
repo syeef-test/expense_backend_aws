@@ -239,7 +239,7 @@
 
   async function getExpenses(page) {
     try {
-      alert(page);
+      
       const token = localStorage.getItem('token');
       const responseExpense = await axios.get(`http://65.2.144.205:3000/expense/get_expense?page=${page}`, {
         headers: {

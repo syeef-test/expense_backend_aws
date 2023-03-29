@@ -26,7 +26,21 @@ const passwordRoute = require("./routes/passwordRoute");
 const app = express();
 
 //app.use(helmet());    //disabled as axios js not loading
-//app.use(helmet.hidePoweredBy());
+//app.use(helmet.hidePoweredBy());   
+// app.use(                                      //axios and bootstrap is loading in localhost
+//   helmet.contentSecurityPolicy({
+//     directives: {
+//       defaultSrc: ["'self'", 'data:', 'blob:'],
+//       fontSrc: ["'self'", 'https:', 'data:'],
+//       scriptSrc: ["'self'", 'unsafe-inline'],
+//       scriptSrc: ["'self'", 'https://*.cdn.jsdelivr.net'],
+//       scriptSrcElem: ["'self'",'https:', 'https://*.cdn.jsdelivr.net'],
+//       styleSrc: ["'self'", 'https:', 'unsafe-inline'],
+//       connectSrc: ["'self'", 'data', 'https://*.cdn.jsdelivr.net']
+//     },
+//   })
+// );
+
 //const accessLogStream = fs.createWriteStream(path.join(__dirname,'access.log'),{flags:'a'});
 //app.use(morgan('combined',{stream:accessLogStream}));
 
@@ -44,8 +58,8 @@ app.use("/password", passwordRoute);
 
 
 app.use((req,res)=>{
-  console.log('url',req.originalUrl);
- res.sendFile(path.join(__dirname,`./public/${req.originalUrl}`));
+  console.log('url',req.url);
+  res.sendFile(path.join(__dirname,`./public/${req.url}`));
   //res.sendFile(`public/${req.url}`, { root: __dirname });
 });
 
