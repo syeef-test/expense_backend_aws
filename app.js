@@ -42,8 +42,11 @@ app.use("/purchase", purchaseRoute);
 app.use("/premiuem", premiuemRoute);
 app.use("/password", passwordRoute);
 
+app.use(express.static(path.resolve(__dirname, "public")));
 app.use((req,res)=>{
-  res.sendFile(path.join(__dirname,`public/${req.url}`));
+  console.log('url',req.originalUrl);
+ res.sendFile(path.join(__dirname,`./public/${req.originalUrl}`));
+  //res.sendFile(`public/${req.url}`, { root: __dirname });
 });
 
 User.hasMany(Expense);
