@@ -94,7 +94,7 @@ exports.checkPasswordLinkStatus = async (req, res, next) => {
                                         }
                                     </script>
 
-                                    <form action="http://127.0.0.1:3000/password/updatepassword/${uuid}" method="get">
+                                    <form action="http://65.2.144.205:3000/password/updatepassword/${uuid}" method="get">
                                         <label for="newpassword">Enter New password</label>
                                         <input name="newpassword" type="password" required></input>
                                         <button>reset password</button>
