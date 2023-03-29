@@ -37,7 +37,7 @@ exports.forgotPassword = async (req, res, next) => {
 
         await t.commit();   //above tra worked send email
 
-        const link = `<a href='http://127.0.0.1:3000/password/resetpassword/${uuid_data}'>Click Here</a>`;
+        const link = `<a href='http://65.2.144.205:3000/password/resetpassword/${uuid_data}'>Click Here</a>`;
         const sendMail = await tranEmailApi.sendTransacEmail({
             sender,
             to: receivers,
