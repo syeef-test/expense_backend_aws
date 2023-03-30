@@ -37,7 +37,7 @@ exports.forgotPassword = async (req, res, next) => {
 
         await t.commit();   //above tra worked send email
 
-        const link = `<a href='https://3.111.64.90:3000/password/resetpassword/${uuid_data}'>Click Here</a>`;
+        const link = `<a href='http://3.111.64.90:3000/password/resetpassword/${uuid_data}'>Click Here</a>`;
         const sendMail = await tranEmailApi.sendTransacEmail({
             sender,
             to: receivers,
@@ -94,7 +94,7 @@ exports.checkPasswordLinkStatus = async (req, res, next) => {
                                         }
                                     </script>
 
-                                    <form action="https://3.111.64.90:3000/password/updatepassword/${uuid}" method="get">
+                                    <form action="http://3.111.64.90:3000/password/updatepassword/${uuid}" method="get">
                                         <label for="newpassword">Enter New password</label>
                                         <input name="newpassword" type="password" required></input>
                                         <button>reset password</button>
