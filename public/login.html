@@ -69,7 +69,7 @@
                 password: password
             }
             
-            const loginData = await axios.post('http://3.111.64.90:3000/user/login', obj);
+            const loginData = await axios.post('https://3.111.64.90:3000/user/login', obj);
             // console.log(loginData.status);
              if (loginData.status === 200) {
                  alert(loginData.data.message);
