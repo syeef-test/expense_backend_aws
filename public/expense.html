@@ -76,20 +76,11 @@
 
         <section>
           <div>
-            <!-- <div class="container w-25">
-                <select class="form-select  h-50 w-50" aria-label="" onselect="setPagesize(event)">
-                  <option value="10">10</option>
-                  <option value="20">20</option>
-                  <option value="30">30</option>
-                  <option value="40">40</option>
-                </select>
-              </div> -->
             <div>
               <div class="container" id="paginationSize" name="paginationSize"></div>
               <ul id="expense" class="list-group"></ul>
             </div>
             <div class="container" id="pagination" name="pagination"></div>
-
           </div>
         </section>
 
@@ -104,7 +95,6 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
-
 
   function showPremiumuserMessage() {
     try {
@@ -157,15 +147,10 @@
           showPagination(responseExpense.data);
         }
       }
-
-      
-
     } catch (error) {
       console.log(error);
     }
   });
-
-
 
   function showPagination({
     currentPage,
@@ -209,37 +194,47 @@
   }
 
   function createExpenseNumberDropdown() {
-    //create a selectbox for pagesize
-    const myParent = document.getElementById('paginationSize');
-    //Create array of options to be added
-    const array = ["5", "10", "20", "30", "40"];
+    try {
+      //create a selectbox for pagesize
+      const myParent = document.getElementById('paginationSize');
+      //Create array of options to be added
+      const array = ["5", "10", "20", "30", "40"];
 
-    //Create and append select list
-    const selectList = document.createElement("select");
-    selectList.id = "mySelect";
-    selectList.addEventListener('change', () => {
-      changePagesize(event);
-    });
-    myParent.appendChild(selectList);
+      //Create and append select list
+      const selectList = document.createElement("select");
+      selectList.id = "mySelect";
+      selectList.addEventListener('change', () => {
+        changePagesize(event);
+      });
+      myParent.appendChild(selectList);
 
-    //Create and append the options
-    for (var i = 0; i < array.length; i++) {
-      var option = document.createElement("option");
-      option.value = array[i];
-      option.text = array[i];
-      selectList.appendChild(option);
+      //Create and append the options
+      for (var i = 0; i < array.length; i++) {
+        var option = document.createElement("option");
+        option.value = array[i];
+        option.text = array[i];
+        selectList.appendChild(option);
+      }
+    } catch (error) {
+      console.log(error);
     }
+
   }
 
   function changePagesize(event) {
-    //alert(event.target.value);
-    const expenseNumber = event.target.value;
-    localStorage.setItem('expenseNumber', expenseNumber);
+    try {
+      //alert(event.target.value);
+      const expenseNumber = event.target.value;
+      localStorage.setItem('expenseNumber', expenseNumber);
+    } catch (error) {
+      console.log(error);
+    }
+
   }
 
   async function getExpenses(page) {
     try {
-      
+
       const token = localStorage.getItem('token');
       const responseExpense = await axios.get(`http://3.111.64.90:3000/expense/get_expense?page=${page}`, {
         headers: {
@@ -367,13 +362,13 @@
           }
         });
         //console.log(userLeaderBoardArray);
-         createLeadboardElement(userLeaderBoardArray);
+        createLeadboardElement(userLeaderBoardArray);
         // userLeaderBoardArray.data.forEach((userDetails) => {
         //   //leaderboardElem.innerHTML += `<ul>Name - ${userDetails.name} Total Expense - ${userDetails.totalExpense}</ul>`;
         //   const childElem = `<ul class="list-group-item leadboard" id="${'leadboard'+userDetails.id}">Name-${userDetails.name}&nbsp&nbspTotalExpense - ${userDetails.totalExpense}</ul>`;
         //   leaderboardElem.innerHTML = leaderboardElem.innerHTML + childElem;
         // });
-        
+
 
       }
       document.getElementById("message").appendChild(inputElement);
@@ -382,41 +377,41 @@
     }
 
   }
-  function createLeadboardElement(userLeaderBoardArray){
+  function createLeadboardElement(userLeaderBoardArray) {
     //console.log(userLeaderBoardArray);
     const dataArray = userLeaderBoardArray.data;
     const parentElement = document.getElementById('leaderboard');
     // parentElement.innerHTML += '<h1>Leader Board</h1>';
 
-   
+
     const prevLielement = document.getElementsByClassName('list-group-item leadboard');
     const prevhElement = document.getElementsByClassName('leadboardHeaderElement');
     //console.log(prevhElement);
-    
+
     //remove header previous
-    while(prevLielement.length > 0){
+    while (prevLielement.length > 0) {
       prevLielement[0].parentNode.removeChild(prevLielement[0]);
       console.log("element removed");
     }
     //remove ul previous
-    while(prevhElement.length>0){
+    while (prevhElement.length > 0) {
       prevhElement[0].parentNode.removeChild(prevhElement[0]);
       console.log("header element removed");
     }
 
     const hElement = document.createElement('h1');
     hElement.className = "leadboardHeaderElement";
-    hElement.id="leadboardHeaderElement";
+    hElement.id = "leadboardHeaderElement";
     hElement.innerHTML += 'Leader Board';
 
-    
+
 
     const liElement = document.createElement('ul');
     liElement.className = "leadboardElement";
-    liElement.id="leadboardElement";
-    
-    dataArray.forEach((element)=>{
-      var childElem = `<ul class="list-group-item leadboard" id="${'leadboard'+element.id}">Name-${element.name}&nbsp&nbspTotalExpense - ${element.totalExpense}</ul>`;
+    liElement.id = "leadboardElement";
+
+    dataArray.forEach((element) => {
+      var childElem = `<ul class="list-group-item leadboard" id="${'leadboard' + element.id}">Name-${element.name}&nbsp&nbspTotalExpense - ${element.totalExpense}</ul>`;
       liElement.innerHTML = liElement.innerHTML + childElem;
     });
     parentElement.appendChild(hElement);

@@ -45,7 +45,7 @@ exports.addExpense = async (req, res, next) => {
   } catch (error) {
     if (t) {
       await t.rollback();
-      res.status(401).json({ error: "Expense Not Added",success:false});
+      res.status(401).json({ error: "Expense Not Added", success: false });
     }
 
     console.log(error);
@@ -56,29 +56,29 @@ exports.addExpense = async (req, res, next) => {
 
 exports.getExpense = async (req, res, next) => {
   try {
-    
-    const page =+ req.query.page || 1;
-    
+
+    const page = + req.query.page || 1;
+
     const ITEMS_PER_PAGE = Number(req.query.expenseNumber) || 10;
     console.log(req.query.expenseNumber);
-    
+
     let countExpenses;
-    
+
     const expenseData = await Expense.findAndCountAll({
       where: { userId: req.user.id },
-      offset: (page-1)*ITEMS_PER_PAGE,
+      offset: (page - 1) * ITEMS_PER_PAGE,
       limit: ITEMS_PER_PAGE
     });
-    
+
     countExpenses = expenseData.count;
     res.status(200).json({
-      expenses:expenseData.rows,
-      currentPage:page,
-      hasNextPage:ITEMS_PER_PAGE * page < countExpenses,
-      nextPage:page + 1,
-      hasPreviousPage:page > 1,
-      previousPage:page - 1,
-      lastPage:Math.ceil(countExpenses/ITEMS_PER_PAGE)
+      expenses: expenseData.rows,
+      currentPage: page,
+      hasNextPage: ITEMS_PER_PAGE * page < countExpenses,
+      nextPage: page + 1,
+      hasPreviousPage: page > 1,
+      previousPage: page - 1,
+      lastPage: Math.ceil(countExpenses / ITEMS_PER_PAGE)
     })
 
   } catch (error) {
@@ -118,11 +118,11 @@ exports.deleteExpense = async (req, res, next) => {
 
     await t.commit();
     //throw new Error();
-    res.status(200).json({ message: "Deleted successfully",success:true});
+    res.status(200).json({ message: "Deleted successfully", success: true });
   } catch (error) {
     if (t) {
       await t.rollback();
-      res.status(404).json({ message: "record not found",success:false});
+      res.status(404).json({ message: "record not found", success: false });
     }
     console.log(error);
   }
@@ -141,11 +141,11 @@ exports.downloadExpense = async (req, res, next) => {
       const stringifiedExpenses = JSON.stringify(expenses);
       //console.log(stringifiedExpenses);
       const filename = `Expense${userId}/${new Date()}.txt`;
-      
-      const fileURL = await S3Service.uploadToS3(stringifiedExpenses,filename);
+
+      const fileURL = await S3Service.uploadToS3(stringifiedExpenses, filename);
       //console.log(fileURL);
 
-      const databaseAddDetails = await downloadExpense.create({expenseurl:fileURL,userId:userId});
+      const databaseAddDetails = await downloadExpense.create({ expenseurl: fileURL, userId: userId });
       //console.log(databaseAddDetails);
 
       const allDownloadRecords = await downloadExpense.findAll(
@@ -164,17 +164,17 @@ exports.downloadExpense = async (req, res, next) => {
         },
         { where: { userId: userId } }
       );
-      
-      
+
+
       res.status(201).json({ data: allDownloadRecords, success: true });
       //res.status(201).json({fileURL,success:true});
       //res.status(201).json({message:"Download Link Generated"});
     } else {
-      res.status(401).json({ message: "User is not Authorized",success:false});
+      res.status(401).json({ message: "User is not Authorized", success: false });
     }
   } catch (error) {
     console.log(error);
     //res.status(500).json({ fileURL: "", success: false, error: error });
-    res.status(500).json({ fileURL: "", success: false});
+    res.status(500).json({ fileURL: "", success: false });
   }
 };

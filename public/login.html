@@ -63,29 +63,27 @@
             event.preventDefault();
             const email = event.target.email.value;
             const password = event.target.password.value;
-            
+
             const obj = {
                 email: email,
                 password: password
             }
-            
+
             const loginData = await axios.post('http://3.111.64.90:3000/user/login', obj);
             // console.log(loginData.status);
-             if (loginData.status === 200) {
-                 alert(loginData.data.message);
-                 //console.log(loginData.data.token);
-                 localStorage.setItem('token',loginData.data.token);
-                 window.location.href = "./expense.html";
-             }
+            if (loginData.status === 200) {
+                alert(loginData.data.message);
+                //console.log(loginData.data.token);
+                localStorage.setItem('token', loginData.data.token);
+                window.location.href = "./expense.html";
+            }
         } catch (error) {
-            if(error){
+            if (error) {
                 alert(error.response.data.message);
                 //console.log(error);
                 //console.log(error);
             }
-            
-            
-            
+
         }
     }
 </script>
