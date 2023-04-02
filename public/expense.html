@@ -27,6 +27,7 @@
         <h2>Expense Page</h2>
       </div>
       <div>
+        <button onclick="logout(event)" class="btn btn-danger">Logout</button>
         <form onsubmit="addExpense(event)" class="form-horizontal">
           <div class="form-group">
             <div class="mb-3">
@@ -496,6 +497,13 @@
     } catch (error) {
       console.log(error);
     }
+  }
+
+  function logout(event){
+    
+    localStorage.removeItem('token');
+    //window.localStorage.clear();
+    window.location.href = "./login.html";
   }
 
 
