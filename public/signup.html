@@ -51,7 +51,7 @@
                     </div>
                 </form>
                 <div>
-                    <a href="login.html">Existing User Login</a>
+                    <a href="index.html">Existing User Login</a>
                 </div>
             </div>
         </div>
@@ -74,12 +74,12 @@
             //console.log(obj);
 
             const signupData = await axios.post(
-                "http://3.111.64.90:3000/user/signup",
+                "http://127.0.0.1:3000/user/signup",
                 obj
             );
             if (signupData.status === 201) {
                 alert(signupData.data.message);
-                window.location.href = "./login.html";
+                window.location.href = "./index.html";
             }
         } catch (error) {
             if (error) {

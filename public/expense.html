@@ -137,7 +137,7 @@
 
       const expenseNumber = localStorage.getItem('expenseNumber');
 
-      const responseExpense = await axios.get(`http://3.111.64.90:3000/expense/get_expense?page=${page}&expenseNumber=${expenseNumber}`, {
+      const responseExpense = await axios.get(`http://127.0.0.1:3000/expense/get_expense?page=${page}&expenseNumber=${expenseNumber}`, {
         headers: {
           'authorization': token
         },
@@ -240,7 +240,7 @@
     try {
 
       const token = localStorage.getItem('token');
-      const responseExpense = await axios.get(`http://3.111.64.90:3000/expense/get_expense?page=${page}`, {
+      const responseExpense = await axios.get(`http://127.0.0.1:3000/expense/get_expense?page=${page}`, {
         headers: {
           'authorization': token
         },
@@ -275,7 +275,7 @@
       }
       //console.log(obj);
       const token = localStorage.getItem('token');
-      const addExpense = await axios.post('http://3.111.64.90:3000/expense/addexpense', obj, {
+      const addExpense = await axios.post('http://127.0.0.1:3000/expense/addexpense', obj, {
         headers: {
           'authorization': token
         }
@@ -320,7 +320,7 @@
       //console.log(expenseId);
       const token = localStorage.getItem('token');
       const response = await axios.delete(
-        `http://3.111.64.90:3000/expense/deleteExpense/${expenseId}`,
+        `http://127.0.0.1:3000/expense/deleteExpense/${expenseId}`,
         {
           headers: {
             'authorization': token
@@ -360,7 +360,7 @@
       inputElement.value = "Show Leaderboard";
       inputElement.onclick = async () => {
         const token = localStorage.getItem('token');
-        const userLeaderBoardArray = await axios.get('http://3.111.64.90:3000/premiuem/showLeaderBoard', {
+        const userLeaderBoardArray = await axios.get('http://127.0.0.1:3000/premiuem/showLeaderBoard', {
           headers: {
             'authorization': token
           }
@@ -425,7 +425,7 @@
 
   document.getElementById("rzp-button1").onclick = async function (e) {
     const token = localStorage.getItem('token');
-    const response = await axios.get('http://3.111.64.90:3000/purchase/premiummembership', {
+    const response = await axios.get('http://127.0.0.1:3000/purchase/premiummembership', {
       headers: {
         'authorization': token
       }
@@ -439,7 +439,7 @@
       //this handler function will handle the success payment
       "handler": async function (response) {
 
-        const res = await axios.post('http://3.111.64.90:3000/purchase/updatetransactionstatus',
+        const res = await axios.post('http://127.0.0.1:3000/purchase/updatetransactionstatus',
           { order_id: response.razorpay_order_id, payment_id: response.razorpay_payment_id }, {
           headers: {
             'authorization': token
@@ -466,7 +466,7 @@
       //alert(response.error.metadata.payment_id);
 
       alert('Something Went Wrong Please Try Again Later');
-      await axios.post('http://3.111.64.90:3000/purchase/updatetransactionstatus',
+      await axios.post('http://127.0.0.1:3000/purchase/updatetransactionstatus',
         { order_id: response.error.metadata.order_id, payment_id: response.error.metadata.payment_id, error_code: response.error.code }, {
         headers: {
           'authorization': token
@@ -479,7 +479,7 @@
   async function download() {
     try {
       const token = localStorage.getItem('token');
-      const downloadLink = await axios.get('http://3.111.64.90:3000/expense/download', { headers: { "authorization": token } });
+      const downloadLink = await axios.get('http://127.0.0.1:3000/expense/download', { headers: { "authorization": token } });
       //console.log(downloadLink);
       if (downloadLink.status === 201) {
         const data = downloadLink.data;
