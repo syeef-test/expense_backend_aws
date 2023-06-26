@@ -8,12 +8,13 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 const path = require("path");
 const fs = require("fs");
+const mongoose = require("mongoose");
 
-const Expense = require("./models/expenseModel");
-const User = require("./models/userModel");
-const Order = require("./models/orderModel");
-const forgotPassword = require("./models/forgotPasswordModel");
-const downloadExpense = require("./models/expenseDownloadModel");
+// const Expense = require("./models/expenseModel");
+// const User = require("./models/userModel");
+// const Order = require("./models/orderModel");
+// const forgotPassword = require("./models/forgotPasswordModel");
+// const downloadExpense = require("./models/expenseDownloadModel");
 
 const userRoute = require("./routes/userRoute");
 const expenseRoute = require("./routes/expenseRoute");
@@ -63,34 +64,36 @@ app.use((req,res)=>{
   //res.sendFile(`public/${req.url}`, { root: __dirname });
 });
 
-User.hasMany(Expense);
-Expense.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
+//-----
+// User.hasMany(Expense);
+// Expense.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
 
-User.hasMany(Order);
-Order.belongsTo(User);
+// User.hasMany(Order);
+// Order.belongsTo(User);
 
-User.hasMany(forgotPassword);
-forgotPassword.belongsTo(User);
+// User.hasMany(forgotPassword);
+// forgotPassword.belongsTo(User);
 
-User.hasMany(downloadExpense);
-downloadExpense.belongsTo(User);
+// User.hasMany(downloadExpense);
+// downloadExpense.belongsTo(User);
 
-sequelize
-  .sync()
-  //.sync({force:true})
-  .then((result) => {
-    app.listen(process.env.PORT || 3000);
-  })
-  .catch((err) => console.log(err));
+// sequelize
+//   .sync()
+//   //.sync({force:true})
+//   .then((result) => {
+//     app.listen(process.env.PORT || 3000);
+//   })
+//   .catch((err) => console.log(err));
+//-----
 
-// try {
-//   const dbcon = async () => {
-//     await sequelize.sync();
-//   };
-// } catch (error) {
-//   console.log(error);
-// }
+mongoose.connect(process.env.MONGODB_URI).then(result=>{
+  //console.log(result);
+  console.log("mongodb connected");
+  app.listen(process.env.PORT || 3000);
+}).catch(err=>{
+  console.log(err);
+});
+ 
+;
 
-// if (dbcon) {
-//   app.listen(process.env.PORT || 3000);
-// }
+

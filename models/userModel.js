@@ -1,34 +1,63 @@
-const Sequelize = require('sequelize');
+const mongoose = require('mongoose');
 
-const sequelize = require('../util/database');
+const Schema = mongoose.Schema;
 
-const Users = sequelize.define('users', {
-    id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        primaryKey: true
+const userSchema = new Schema({
+    name:{
+        type:String,
+        required:true
     },
-    name: {
-        type: Sequelize.STRING,
-        allowNull: false
+    email:{
+        type:String,
+        required:true
     },
-    email: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: false
+    password:{
+        type:String,
+        required:true
     },
-    password: {
-        type: Sequelize.STRING,
-        allowNull: false
+    ispremiumuser:{
+        type:Boolean,
+        required:false,
+        default:false
     },
-    ispremiumuser: Sequelize.BOOLEAN,
-    totalExpense: {
-        type: Sequelize.DOUBLE,
-        defaultValue: 0.00,
-        allowNull: true
-    }
+    totalExpense:{
+        type:Number,
+        required:false
+    },
+
 });
 
+module.exports = mongoose.model('User',userSchema);
 
-module.exports = Users;
+
+
+// const Sequelize = require('sequelize');
+// const sequelize = require('../util/database');
+// const Users = sequelize.define('users', {
+//     id: {
+//         type: Sequelize.INTEGER,
+//         autoIncrement: true,
+//         allowNull: false,
+//         primaryKey: true
+//     },
+//     name: {
+//         type: Sequelize.STRING,
+//         allowNull: false
+//     },
+//     email: {
+//         type: Sequelize.STRING,
+//         allowNull: false,
+//         unique: false
+//     },
+//     password: {
+//         type: Sequelize.STRING,
+//         allowNull: false
+//     },
+//     ispremiumuser: Sequelize.BOOLEAN,
+//     totalExpense: {
+//         type: Sequelize.DOUBLE,
+//         defaultValue: 0.00,
+//         allowNull: true
+//     }
+// });
+//module.exports = Users;
