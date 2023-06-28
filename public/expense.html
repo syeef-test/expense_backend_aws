@@ -34,8 +34,8 @@
         <form onsubmit="addExpense(event)" class="form-horizontal">
           <div class="form-group">
             <div class="mb-3">
-              <label for="expenseAmount" class="form-label">Enter Expense Amount:</label>
-              <input type="number" class="form-control" name="expenseAmount" id="expenseAmount" required />
+              <label for="expenseamount" class="form-label">Enter Expense Amount:</label>
+              <input type="number" class="form-control" name="expenseamount" id="expenseamount" required />
             </div>
           </div>
           <div class="form-group">
@@ -264,12 +264,12 @@
   async function addExpense(event) {
     try {
       event.preventDefault();
-      const expsenseAmount = event.target.expenseAmount.value;
+      const expenseamount = event.target.expenseamount.value;
       const description = event.target.description.value;
       const category = event.target.category.value;
 
       const obj = {
-        expsenseAmount: expsenseAmount,
+        expenseamount: expenseamount,
         description: description,
         category: category
       }
@@ -297,7 +297,7 @@
     try {
       const parentElem = document.getElementById("expense");
       //const childElem = document.createElement('li');
-      const childElem = `<li class="list-group-item" id=${obj.id}>${obj.expenseamount}-${obj.category}-${obj.description}&nbsp<button class="btn btn-danger" onclick=deleteExpense('${obj.id}')>Delete</button></li>`;
+      const childElem = `<li class="list-group-item" id=${obj._id}>${obj.expenseamount}-${obj.category}-${obj.description}&nbsp<button class="btn btn-danger" onclick=deleteExpense('${obj._id}')>Delete</button></li>`;
 
       parentElem.innerHTML = parentElem.innerHTML + childElem;
     } catch (error) {
@@ -317,7 +317,7 @@
 
   async function deleteExpense(expenseId) {
     try {
-      //console.log(expenseId);
+      console.log(expenseId);
       const token = localStorage.getItem('token');
       const response = await axios.delete(
         `http://127.0.0.1:3000/expense/deleteExpense/${expenseId}`,

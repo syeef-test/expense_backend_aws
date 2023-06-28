@@ -8,7 +8,7 @@ const authenticate = (req, res, next) => {
     //console.log("auth:",token);
     const user = jwt.verify(token, process.env.TOKEN_SECRET);
     //console.log(user.userId);
-    User.findByPk(user.userId)
+    User.findById(user.userId)  //chenged findByPk to findById for nosql
       .then((user) => {
         //console.log("found user in auth",JSON.stringify(user));
         req.user = user;
