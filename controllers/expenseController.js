@@ -6,11 +6,8 @@ const sequelize = require("../util/database");
 const S3Service = require("../services/s3services");
 const UserServices = require("../services/userservices");
 
-
 //const expenseService = require('../services/mongoExpenseService');
-const mongoose = require('mongoose');
-
-
+const mongoose = require("mongoose");
 
 exports.addExpense = async (req, res, next) => {
   const session = await mongoose.startSession();
@@ -37,7 +34,7 @@ exports.addExpense = async (req, res, next) => {
     const newAmount = parseInt(oldAmount) + parseInt(expenseamount);
 
     const userUpdate = await User.findOneAndUpdate(
-      { _id: req.user._id }, 
+      { _id: req.user._id },
       { $set: { totalExpense: newAmount } },
       { new: true, session }
     );
@@ -45,9 +42,7 @@ exports.addExpense = async (req, res, next) => {
     await session.commitTransaction();
     session.endSession();
 
-    res
-      .status(201)
-      .json({ message: "Expense Added", data: data.toJSON() });
+    res.status(201).json({ message: "Expense Added", data: data.toJSON() });
   } catch (error) {
     console.log(error);
     await session.abortTransaction();
@@ -99,24 +94,44 @@ exports.addExpense = async (req, res, next) => {
   // }
 };
 
-
-
 exports.getExpense = async (req, res, next) => {
+  try {
+    const page = +req.query.page || 1;
+    const ITEMS_PER_PAGE = Number(req.query.expenseNumber) || 10;
+
+    const countExpenses = await Expense.countDocuments({
+      userId: req.user._id,
+    });
+
+    const expenses = await Expense.find({ userId: req.user._id })
+      .skip((page - 1) * ITEMS_PER_PAGE)
+      .limit(ITEMS_PER_PAGE);
+
+      console.log(expenses);
+
+    res.status(200).json({
+      expenses: expenses,
+      currentPage: page,
+      hasNextPage: ITEMS_PER_PAGE * page < countExpenses,
+      nextPage: page + 1,
+      hasPreviousPage: page > 1,
+      previousPage: page - 1,
+      lastPage: Math.ceil(countExpenses / ITEMS_PER_PAGE),
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(401).json({ error: "No Data Found", success: false });
+  }
   // try {
-
   //   const page = + req.query.page || 1;
-
   //   const ITEMS_PER_PAGE = Number(req.query.expenseNumber) || 10;
   //   console.log(req.query.expenseNumber);
-
   //   let countExpenses;
-
   //   const expenseData = await Expense.findAndCountAll({
   //     where: { userId: req.user.id },
   //     offset: (page - 1) * ITEMS_PER_PAGE,
   //     limit: ITEMS_PER_PAGE
   //   });
-
   //   countExpenses = expenseData.count;
   //   res.status(200).json({
   //     expenses: expenseData.rows,
@@ -126,8 +141,7 @@ exports.getExpense = async (req, res, next) => {
   //     hasPreviousPage: page > 1,
   //     previousPage: page - 1,
   //     lastPage: Math.ceil(countExpenses / ITEMS_PER_PAGE)
-  //   })
-
+  //   });
   // } catch (error) {
   //   console.log(error);
   // }
@@ -136,10 +150,12 @@ exports.getExpense = async (req, res, next) => {
 exports.deleteExpense = async (req, res, next) => {
   const session = await mongoose.startSession();
   session.startTransaction();
-  try{
-   // console.log(req.params.id);
+  try {
+    // console.log(req.params.id);
 
-    const expenseDetails = await Expense.findOne({ _id: req.params.id }).session(session);
+    const expenseDetails = await Expense.findOne({
+      _id: req.params.id,
+    }).session(session);
     //console.log(expenseDetails);
     const expenseamount = parseFloat(expenseDetails.expenseamount);
 
@@ -147,26 +163,28 @@ exports.deleteExpense = async (req, res, next) => {
     const newAmount = parseInt(oldAmount) - parseInt(expenseamount);
 
     const userUpdate = await User.findOneAndUpdate(
-      { _id: req.user.id }, 
+      { _id: req.user.id },
       { $set: { totalExpense: newAmount } },
       { new: true, session }
     );
 
-    const data = await Expense.deleteOne({'_id':req.params.id}).session(session);
-    if(data){
+    const data = await Expense.deleteOne({ _id: req.params.id }).session(
+      session
+    );
+    if (data) {
       res.status(200).json({ message: "Deleted successfully", success: true });
-    }else{
+    } else {
       res.status(404).json({ message: "Record Not Found", success: false });
     }
     await session.commitTransaction();
     session.endSession();
-  }catch(error){
+  } catch (error) {
     console.log(error);
     await session.abortTransaction();
     session.endSession();
     res.status(401).json({ error: "Record Not Deleted", success: false });
   }
-  
+
   // const t = await sequelize.transaction(); //unmanged transaction
   // try {
   //   const expenseId = req.params.id;
@@ -208,26 +226,25 @@ exports.deleteExpense = async (req, res, next) => {
   // }
 };
 
-
-
 exports.downloadExpense = async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    console.log(userId);
+  } catch (error) {
+    console.log(error);
+  }
   // try {
   //   const userId = req.user.id;
-
   //   const isPremiuemuser = await User.findOne({ where: { id: userId } });
-
   //   if (isPremiuemuser.ispremiumuser) {
   //     const expenses = await UserServices.getExpenses(req);
   //     const stringifiedExpenses = JSON.stringify(expenses);
   //     //console.log(stringifiedExpenses);
   //     const filename = `Expense${userId}/${new Date()}.txt`;
-
   //     const fileURL = await S3Service.uploadToS3(stringifiedExpenses, filename);
   //     //console.log(fileURL);
-
   //     const databaseAddDetails = await downloadExpense.create({ expenseurl: fileURL, userId: userId });
   //     //console.log(databaseAddDetails);
-
   //     const allDownloadRecords = await downloadExpense.findAll(
   //       {
   //         attributes: [
@@ -244,8 +261,6 @@ exports.downloadExpense = async (req, res, next) => {
   //       },
   //       { where: { userId: userId } }
   //     );
-
-
   //     res.status(201).json({ data: allDownloadRecords, success: true });
   //     //res.status(201).json({fileURL,success:true});
   //     //res.status(201).json({message:"Download Link Generated"});

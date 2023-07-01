@@ -133,24 +133,26 @@
       }
 
       const page = 1;
-      createExpenseNumberDropdown();
-
       const expenseNumber = localStorage.getItem('expenseNumber');
+      createExpenseNumberDropdown();
+      getExpenses(page,expenseNumber); 
 
-      const responseExpense = await axios.get(`http://127.0.0.1:3000/expense/get_expense?page=${page}&expenseNumber=${expenseNumber}`, {
-        headers: {
-          'authorization': token
-        },
-      });
+      
 
-      if (responseExpense !== null) {
-        if (responseExpense.data.expenses.length !== 0) {
-          responseExpense.data.expenses.forEach((element) => {
-            showExpenseonScreen(element);
-          });
-          showPagination(responseExpense.data);
-        }
-      }
+      // const responseExpense = await axios.get(`http://127.0.0.1:3000/expense/get_expense?page=${page}&expenseNumber=${expenseNumber}`, {
+      //   headers: {
+      //     'authorization': token
+      //   },
+      // });
+
+      // if (responseExpense !== null) {
+      //   if (responseExpense.data.expenses.length !== 0) {
+      //     responseExpense.data.expenses.forEach((element) => {
+      //       showExpenseonScreen(element);
+      //     });
+      //     showPagination(responseExpense.data);
+      //   }
+      // }
     } catch (error) {
       console.log(error);
     }
@@ -207,7 +209,7 @@
       //Create and append select list
       const selectList = document.createElement("select");
       selectList.id = "mySelect";
-      selectList.addEventListener('change', () => {
+      selectList.addEventListener('change', (event) => {
         changePagesize(event);
       });
       myParent.appendChild(selectList);
@@ -227,26 +229,40 @@
 
   function changePagesize(event) {
     try {
-      //alert(event.target.value);
+      alert(event.target.value);
       const expenseNumber = event.target.value;
       localStorage.setItem('expenseNumber', expenseNumber);
+      getExpenses(1,expenseNumber);
     } catch (error) {
       console.log(error);
     }
 
   }
 
-  async function getExpenses(page) {
+  async function getExpenses(page,expenseNumber) {
     try {
 
       const token = localStorage.getItem('token');
-      const responseExpense = await axios.get(`http://127.0.0.1:3000/expense/get_expense?page=${page}`, {
-        headers: {
-          'authorization': token
-        },
-      });
-      console.log(responseExpense);
-      if (responseExpense !== null) {
+    let url = `http://127.0.0.1:3000/expense/get_expense?page=${page}`;
+
+    if (expenseNumber !== '') {
+      url += `&expenseNumber=${expenseNumber}`;
+    }
+
+    const responseExpense = await axios.get(url, {
+      headers: {
+        'authorization': token
+      },
+    });
+
+    show(responseExpense);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  function show(responseExpense){
+    if (responseExpense !== null) {
         removeCurrentPageExpenseFromScreen();
         if (responseExpense.data.expenses.length !== 0) {
           responseExpense.data.expenses.forEach((element) => {
@@ -255,10 +271,6 @@
           showPagination(responseExpense.data);
         }
       }
-
-    } catch (error) {
-      console.log(error);
-    }
   }
 
   async function addExpense(event) {
@@ -283,7 +295,7 @@
 
       if (addExpense.status === 201) {
         alert(addExpense.data.message);
-        showExpenseonScreen(addExpense.data.data);
+        //showExpenseonScreen(addExpense.data.data);
       }
     } catch (error) {
       if (error) {
@@ -295,6 +307,7 @@
 
   function showExpenseonScreen(obj) {
     try {
+      console.log(obj);
       const parentElem = document.getElementById("expense");
       //const childElem = document.createElement('li');
       const childElem = `<li class="list-group-item" id=${obj._id}>${obj.expenseamount}-${obj.category}-${obj.description}&nbsp<button class="btn btn-danger" onclick=deleteExpense('${obj._id}')>Delete</button></li>`;
@@ -430,7 +443,7 @@
         'authorization': token
       }
     });
-    //console.log(response);
+    console.log(response);
 
     var options =
     {
