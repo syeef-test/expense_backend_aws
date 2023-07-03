@@ -229,7 +229,12 @@ exports.deleteExpense = async (req, res, next) => {
 exports.downloadExpense = async (req, res, next) => {
   try {
     const userId = req.user._id;
-    console.log(userId);
+    const isPremiuemuser = await User.findOne({_id:userId});
+    console.log(isPremiuemuser);
+    if (isPremiuemuser.ispremiumuser) {
+      const expenses = await Expense.finn({userId:userId});
+      console.log(expenses);
+    }
   } catch (error) {
     console.log(error);
   }
