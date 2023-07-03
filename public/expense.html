@@ -230,23 +230,26 @@
 
   function changePagesize(event) {
     try {
-      alert(event.target.value);
+      console.log(event.target.value);
       const expenseNumber = event.target.value;
       localStorage.setItem('expenseNumber', expenseNumber);
-      getExpenses(1,expenseNumber);
+      //getExpenses(1,expenseNumber);
     } catch (error) {
       console.log(error);
     }
 
   }
 
-  async function getExpenses(page,expenseNumber) {
+  async function getExpenses(page) {
     try {
 
-      const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token');
     let url = `http://127.0.0.1:3000/expense/get_expense?page=${page}`;
 
-    if (expenseNumber !== '') {
+   
+
+    if (localStorage.getItem('expenseNumber')) {
+      const expenseNumber = localStorage.getItem('expenseNumber');
       url += `&expenseNumber=${expenseNumber}`;
     }
 
@@ -296,7 +299,7 @@
 
       if (addExpense.status === 201) {
         alert(addExpense.data.message);
-        //showExpenseonScreen(addExpense.data.data);
+        showExpenseonScreen(addExpense.data.data);
       }
     } catch (error) {
       if (error) {

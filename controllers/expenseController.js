@@ -8,6 +8,7 @@ const UserServices = require("../services/userservices");
 
 //const expenseService = require('../services/mongoExpenseService');
 const mongoose = require("mongoose");
+const XLSX = require('xlsx');
 
 exports.addExpense = async (req, res, next) => {
   const session = await mongoose.startSession();
@@ -232,8 +233,34 @@ exports.downloadExpense = async (req, res, next) => {
     const isPremiuemuser = await User.findOne({_id:userId});
     console.log(isPremiuemuser);
     if (isPremiuemuser.ispremiumuser) {
-      const expenses = await Expense.finn({userId:userId});
+      const expenses = await Expense.find({userId:userId});
+      const stringifiedExpenses = JSON.stringify(expenses);
+      const filename = `Expense${userId}/${new Date()}.xlsx`;
       console.log(expenses);
+
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.json_to_sheet(JSON.parse(stringifiedExpenses));
+
+      XLSX.utils.book_append_sheet(wb, ws, 'Expenses');
+      const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
+  
+      const fileURL = await S3Service.uploadToS3(wbout, filename);
+      //console.log(fileURL);
+
+      const databaseAddDetails = await downloadExpense.create({ expenseurl: fileURL, userId: userId });
+      const allDownloadRecords = await downloadExpense.find(
+        { userId: userId },
+        {
+          expenseUrl: 1,
+          createdAt: {
+            $dateToString: {
+              format: '%Y-%m-%d %H:%M:%S',
+              date: '$createdAt'
+            }
+          }
+        }
+      );
+      res.status(201).json({ data: allDownloadRecords, success: true });
     }
   } catch (error) {
     console.log(error);
