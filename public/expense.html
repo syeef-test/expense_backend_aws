@@ -69,7 +69,7 @@
           <div class="mb-3">
             <input class="btn btn-warning" type="button" name="rzp-button1" id="rzp-button1" value="Buy Premium" />
             <button class="btn btn-primary" onclick="download()" id="downloadexpense">Download File</button>
-            <a class="btn btn-warning" href="./details.html">Export Details</a>
+            
             <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
             <ul id="listOfExpenses"></ul>
           </div>
@@ -233,7 +233,7 @@
       console.log(event.target.value);
       const expenseNumber = event.target.value;
       localStorage.setItem('expenseNumber', expenseNumber);
-      //getExpenses(1,expenseNumber);
+      getExpenses(1);
     } catch (error) {
       console.log(error);
     }
@@ -311,7 +311,7 @@
 
   function showExpenseonScreen(obj) {
     try {
-      console.log(obj);
+      //console.log(obj);
       const parentElem = document.getElementById("expense");
       //const childElem = document.createElement('li');
       const childElem = `<li class="list-group-item" id=${obj._id}>${obj.expenseamount}-${obj.category}-${obj.description}&nbsp<button class="btn btn-danger" onclick=deleteExpense('${obj._id}')>Delete</button></li>`;
@@ -323,18 +323,23 @@
   }
 
   function deleteExpenseFromScreen(expenseId) {
-    try {
-      const parentElem = document.getElementById("expense");
-      const childElem = document.getElementById(expenseId);
-      parentElem.removeChild(childElem); //element removed from parent element
-    } catch (error) {
-      console.log(error);
-    }
+  try {
+    const parentElem = document.getElementById("expense");
+    console.log("Parent element:", parentElem);
+    
+    const childElem = document.getElementById(expenseId);
+    console.log("Child element:", childElem);
+    
+    parentElem.removeChild(childElem); // element removed from parent element
+  } catch (error) {
+    console.log(error);
   }
+}
+
 
   async function deleteExpense(expenseId) {
     try {
-      console.log(expenseId);
+      //console.log(expenseId);
       const token = localStorage.getItem('token');
       const response = await axios.delete(
         `http://127.0.0.1:3000/expense/deleteExpense/${expenseId}`,
@@ -503,14 +508,17 @@
         var downloadElem = document.getElementById('allDownloads');
         downloadElem.innerHTML += '<h1>All Downloads</h1>';
         downloadLink.data.data.forEach((downloadDetails) => {
-          downloadElem.innerHTML += `<ol>Url - <a href='${downloadDetails.expenseurl}'>Click To Download</a> Date - ${downloadDetails.createdAt}</ol>`;
+          console.log(downloadDetails.expenseurl);
+
+          const dateObj = new Date(downloadDetails.createdAt);
+
+          const formattedDate = dateObj.toLocaleDateString();
+          const formattedTime = dateObj.toLocaleTimeString();
+
+          //console.log(formattedDate); // Output: 7/4/2023
+          //console.log(formattedTime); // Output: 4:34:52 AM
+          downloadElem.innerHTML += `<ol>Url - <a href='${downloadDetails.expenseurl}'>Click To Download</a> Date - ${formattedDate}::${formattedTime}</ol>`;
         });
-        //old
-        // var a = document.createElement("a");
-        // alert(downloadLink.data.fileURL);
-        // a.href = downloadLink.data.fileURL;
-        // a.download = 'myexpense.csv';
-        // a.click();
       } else {
         throw new Error(downloadLink.error);
       }
