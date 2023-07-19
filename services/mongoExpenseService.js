@@ -113,7 +113,7 @@ exports.downloadExpense = async (userId) => {
       const expenses = await Expense.find({ userId });
       const stringifiedExpenses = JSON.stringify(expenses);
       const filename = `Expense${userId}/${new Date()}.xlsx`;
-      console.log(expenses);
+      //console.log(expenses);
 
       const wb = XLSX.utils.book_new();
       const ws = XLSX.utils.json_to_sheet(JSON.parse(stringifiedExpenses));
