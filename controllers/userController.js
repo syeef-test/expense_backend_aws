@@ -1,8 +1,17 @@
 
 const mongoUserService  = require("../services/mongoUserService");
 
+const { validationResult } = require('express-validator');
+
 exports.postSignup = async (req, res, next) => {
   try{
+
+    const { name,email, password } = req.body;
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "Name ,Email and Password are required" });
+    }
+
+
       const user = await mongoUserService.createUser(req.body);
       if(user){
         res.status(201).json({ message: "Sign Up Succesful", success: true });
@@ -23,6 +32,13 @@ exports.postSignup = async (req, res, next) => {
 
 exports.postLogin = async (req, res, next) => {
   try{
+
+  const { username, password } = req.body;
+  if (!username || !password) {
+    return res.status(400).json({ message: "Username and password are required" });
+  }
+
+    
     const user = await mongoUserService.loginUser(req.body);
       if(user){
         if(user.success){

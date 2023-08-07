@@ -26,9 +26,10 @@ exports.createUser = async (user) => {
 exports.loginUser = async (user) => {
     const email = user.email;
     const password = user.password;
-
-    const data = await userModel.findOne({ 'email': email });
-    console.log(data);
+    
+    
+    const data = await userModel.findOne({'email': email});
+    
 
     if (data && Object.keys(data).length > 0) {
         const match = await bcrypt.compareSync(user.password, data.password);
